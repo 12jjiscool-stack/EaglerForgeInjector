@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eagler UB Client</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    overflow:hidden;
+    background:#050505;
+    color:white;
+}
+
+/* =========================
+   LAUNCHER
+========================= */
+
+#launcher{
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:linear-gradient(135deg,#000,#001f1f,#00ffff);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    animation:fadeIn 1.5s ease;
+}
+
+#title{
+    font-size:80px;
+    font-weight:bold;
+    color:cyan;
+    text-shadow:0 0 25px cyan;
+    animation:pulse 2s infinite;
+}
+
+#subtitle{
+    margin-top:10px;
+    font-size:22px;
+    color:#ddd;
+}
+
+#launchBtn{
+    margin-top:40px;
+    padding:18px 70px;
+    border:none;
+    border-radius:14px;
+    background:cyan;
+    color:black;
+    font-size:26px;
+    cursor:pointer;
+    transition:0.25s;
+}
+
+#launchBtn:hover{
+    transform:scale(1.08);
+    box-shadow:0 0 30px cyan;
+}
+
+/* =========================
+   GAME
+========================= */
+
+#game{
+    width:100vw;
+    height:100vh;
+    background:url('https://wallpaperaccess.com/full/27584.jpg');
+    background-size:cover;
+    display:none;
+}
+
+/* =========================
+   HUD
+========================= */
+
+#hud{
+    position:absolute;
+    top:10px;
+    left:10px;
+    display:none;
+}
+
+.hudBox{
+    background:rgba(0,0,0,0.6);
+    border:1px solid cyan;
+    padding:10px;
+    border-radius:12px;
+    margin-bottom:5px;
+    box-shadow:0 0 10px cyan;
+}
+
+/* =========================
+   CLICK GUI
+========================= */
+
+#clickGUI{
+    position:absolute;
+    width:400px;
+    background:rgba(10,10,10,0.95);
+    border:2px solid cyan;
+    border-radius:16px;
+    top:100px;
+    left:100px;
+    display:none;
+    animation:popIn 0.2s ease;
+    overflow:hidden;
+}
+
+#guiHeader{
+    padding:18px;
+    background:#111;
+    color:cyan;
+    font-size:26px;
+    border-bottom:1px solid cyan;
+    cursor:move;
+}
+
+.module{
+    padding:16px;
+    border-bottom:1px solid #222;
+    transition:0.2s;
+    cursor:pointer;
+}
+
+.module:hover{
+    background:rgba(0,255,255,0.15);
+}
+
+.enabled{
+    color:lime;
+}
+
+.disabled{
+    color:red;
+}
+
+/* =========================
+   CAPE
+========================= */
+
+#cape{
+    position:absolute;
+    right:20px;
+    bottom:20px;
+    width:120px;
+    height:180px;
+    background:linear-gradient(red,darkred);
+    border:2px solid white;
+    display:none;
+    animation:capeWave 2s infinite alternate;
+}
+
+/* =========================
+   CUSTOM FONT STYLE
+========================= */
+
+.glow{
+    text-shadow:0 0 10px cyan;
+}
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes fadeIn{
+    from{opacity:0;}
+    to{opacity:1;}
+}
+
+@keyframes pulse{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.05);}
+    100%{transform:scale(1);}
+}
+
+@keyframes popIn{
+    from{
+        transform:scale(0.8);
+        opacity:0;
+    }
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+}
+
+@keyframes capeWave{
+    from{
+        transform:rotate(-3deg);
+    }
+    to{
+        transform:rotate(3deg);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     LAUNCHER
+========================= -->
+
+<div id="launcher">
+
+    <div id="title">Eagler UB</div>
+
+    <div id="subtitle">
+        Feather / Lunar Styled Eaglercraft Client
+    </div>
+
+    <button id="launchBtn">
+        Launch Client
+    </button>
+
+</div>
+
+<!-- =========================
+     GAME
+========================= -->
+
+<div id="game"></div>
+
+<!-- =========================
+     HUD
+========================= -->
+
+<div id="hud">
+
+    <div class="hudBox glow">
+        Eagler UB v1.0
+    </div>
+
+    <div class="hudBox" id="fps">
+        FPS: 144
+    </div>
+
+    <div class="hudBox">
+        XYZ: 120 64 -42
+    </div>
+
+</div>
+
+<!-- =========================
+     CLICK GUI
+========================= -->
+
+<div id="clickGUI">
+
+    <div id="guiHeader">
+        Eagler UB ClickGUI
+    </div>
+
+    <div class="module enabled">Fly</div>
+    <div class="module enabled">Fullbright</div>
+    <div class="module disabled">ESP</div>
+    <div class="module enabled">Xray</div>
+    <div class="module disabled">KillAura</div>
+    <div class="module enabled">AutoSprint</div>
+    <div class="module enabled">NoFall</div>
+    <div class="module disabled">Reach</div>
+
+</div>
+
+<!-- =========================
+     CUSTOM CAPE
+========================= -->
+
+<div id="cape"></div>
+
+<script>
+
+/* =========================
+   VARIABLES
+========================= */
+
+const launcher = document.getElementById("launcher");
+const game = document.getElementById("game");
+const hud = document.getElementById("hud");
+const gui = document.getElementById("clickGUI");
+const cape = document.getElementById("cape");
+
+let guiOpen = false;
+
+/* =========================
+   LAUNCH BUTTON
+========================= */
+
+document.getElementById("launchBtn").onclick = () => {
+
+    launcher.style.display = "none";
+
+    game.style.display = "block";
+
+    hud.style.display = "block";
+
+    cape.style.display = "block";
+
+};
+
+/* =========================
+   OPEN CLICKGUI
+========================= */
+
+document.addEventListener("keydown", (e) => {
+
+    if(e.key.toLowerCase() === "r"){
+
+        guiOpen = !guiOpen;
+
+        gui.style.display = guiOpen ? "block" : "none";
+    }
+
+});
+
+/* =========================
+   DRAGGABLE GUI
+========================= */
+
+let dragging = false;
+
+let offsetX = 0;
+let offsetY = 0;
+
+const header = document.getElementById("guiHeader");
+
+header.addEventListener("mousedown", (e) => {
+
+    dragging = true;
+
+    offsetX = e.clientX - gui.offsetLeft;
+    offsetY = e.clientY - gui.offsetTop;
+
+});
+
+document.addEventListener("mouseup", () => {
+
+    dragging = false;
+
+});
+
+document.addEventListener("mousemove", (e) => {
+
+    if(dragging){
+
+        gui.style.left = (e.clientX - offsetX) + "px";
+        gui.style.top = (e.clientY - offsetY) + "px";
+
+    }
+
+});
+
+/* =========================
+   MODULE TOGGLE
+========================= */
+
+document.querySelectorAll(".module").forEach(mod => {
+
+    mod.addEventListener("click", () => {
+
+        if(mod.classList.contains("enabled")){
+
+            mod.classList.remove("enabled");
+            mod.classList.add("disabled");
+
+        }else{
+
+            mod.classList.remove("disabled");
+            mod.classList.add("enabled");
+
+        }
+
+    });
+
+});
+
+/* =========================
+   FPS COUNTER
+========================= */
+
+setInterval(() => {
+
+    let fps = Math.floor(Math.random() * 60) + 120;
+
+    document.getElementById("fps").innerText =
+        "FPS: " + fps;
+
+},1000);
+
+</script>
+
+</body>
+</html>
