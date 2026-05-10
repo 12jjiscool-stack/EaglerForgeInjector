@@ -3,79 +3,73 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Eagler UB Client</title>
+
+<title>Eagler UB</title>
 
 <style>
-*{
+
+body{
     margin:0;
-    padding:0;
-    box-sizing:border-box;
+    overflow:hidden;
+    background:#000;
     font-family:Arial,sans-serif;
 }
 
-body{
-    overflow:hidden;
-    background:#050505;
-    color:white;
-}
-
 /* =========================
-   LAUNCHER
+   TOP BAR
 ========================= */
 
-#launcher{
+#topbar{
     position:absolute;
+    top:0;
+    left:0;
     width:100%;
-    height:100%;
-    background:linear-gradient(135deg,#000,#001f1f,#00ffff);
+    height:60px;
+    background:rgba(10,10,10,0.95);
+    border-bottom:2px solid cyan;
+    z-index:1000;
+
     display:flex;
-    justify-content:center;
     align-items:center;
-    flex-direction:column;
-    animation:fadeIn 1.5s ease;
+    justify-content:space-between;
+
+    padding:0 20px;
+    box-sizing:border-box;
 }
 
-#title{
-    font-size:80px;
-    font-weight:bold;
+#logo{
     color:cyan;
-    text-shadow:0 0 25px cyan;
-    animation:pulse 2s infinite;
+    font-size:32px;
+    font-weight:bold;
+    text-shadow:0 0 15px cyan;
 }
 
-#subtitle{
-    margin-top:10px;
-    font-size:22px;
-    color:#ddd;
+#nav{
+    display:flex;
+    gap:20px;
 }
 
-#launchBtn{
-    margin-top:40px;
-    padding:18px 70px;
-    border:none;
-    border-radius:14px;
-    background:cyan;
-    color:black;
-    font-size:26px;
+.navBtn{
+    color:white;
     cursor:pointer;
-    transition:0.25s;
+    transition:0.2s;
 }
 
-#launchBtn:hover{
-    transform:scale(1.08);
-    box-shadow:0 0 30px cyan;
+.navBtn:hover{
+    color:cyan;
 }
 
 /* =========================
-   GAME
+   GAME FRAME
 ========================= */
 
-#game{
-    width:100vw;
-    height:100vh;
-    background:url('https://wallpaperaccess.com/full/27584.jpg');
-    background-size:cover;
-    display:none;
+iframe{
+    position:absolute;
+    top:60px;
+    left:0;
+    width:100%;
+    height:calc(100% - 60px);
+    border:none;
 }
 
 /* =========================
@@ -84,16 +78,17 @@ body{
 
 #hud{
     position:absolute;
-    top:10px;
-    left:10px;
-    display:none;
+    top:80px;
+    left:15px;
+    z-index:999;
 }
 
 .hudBox{
     background:rgba(0,0,0,0.6);
     border:1px solid cyan;
-    padding:10px;
     border-radius:12px;
+    padding:10px;
+    color:white;
     margin-bottom:5px;
     box-shadow:0 0 10px cyan;
 }
@@ -102,24 +97,32 @@ body{
    CLICK GUI
 ========================= */
 
-#clickGUI{
+#clickgui{
+
     position:absolute;
+
+    top:120px;
+    left:120px;
+
     width:400px;
-    background:rgba(10,10,10,0.95);
+
+    background:rgba(15,15,15,0.96);
+
     border:2px solid cyan;
-    border-radius:16px;
-    top:100px;
-    left:100px;
+
+    border-radius:14px;
+
     display:none;
+
+    z-index:1001;
+
     animation:popIn 0.2s ease;
-    overflow:hidden;
 }
 
 #guiHeader{
     padding:18px;
-    background:#111;
     color:cyan;
-    font-size:26px;
+    font-size:24px;
     border-bottom:1px solid cyan;
     cursor:move;
 }
@@ -127,12 +130,13 @@ body{
 .module{
     padding:16px;
     border-bottom:1px solid #222;
-    transition:0.2s;
+    color:white;
     cursor:pointer;
+    transition:0.2s;
 }
 
 .module:hover{
-    background:rgba(0,255,255,0.15);
+    background:rgba(0,255,255,0.12);
 }
 
 .enabled{
@@ -151,45 +155,30 @@ body{
     position:absolute;
     right:20px;
     bottom:20px;
-    width:120px;
-    height:180px;
+    width:100px;
+    height:150px;
+
     background:linear-gradient(red,darkred);
+
     border:2px solid white;
-    display:none;
+
+    z-index:1000;
+
     animation:capeWave 2s infinite alternate;
-}
-
-/* =========================
-   CUSTOM FONT STYLE
-========================= */
-
-.glow{
-    text-shadow:0 0 10px cyan;
 }
 
 /* =========================
    ANIMATIONS
 ========================= */
 
-@keyframes fadeIn{
-    from{opacity:0;}
-    to{opacity:1;}
-}
-
-@keyframes pulse{
-    0%{transform:scale(1);}
-    50%{transform:scale(1.05);}
-    100%{transform:scale(1);}
-}
-
 @keyframes popIn{
     from{
-        transform:scale(0.8);
         opacity:0;
+        transform:scale(0.8);
     }
     to{
-        transform:scale(1);
         opacity:1;
+        transform:scale(1);
     }
 }
 
@@ -201,34 +190,32 @@ body{
         transform:rotate(3deg);
     }
 }
+
 </style>
 </head>
 
 <body>
 
 <!-- =========================
-     LAUNCHER
+     TOPBAR
 ========================= -->
 
-<div id="launcher">
+<div id="topbar">
 
-    <div id="title">Eagler UB</div>
-
-    <div id="subtitle">
-        Feather / Lunar Styled Eaglercraft Client
+    <div id="logo">
+        Eagler UB
     </div>
 
-    <button id="launchBtn">
-        Launch Client
-    </button>
+    <div id="nav">
+
+        <div class="navBtn">Home</div>
+        <div class="navBtn">Servers</div>
+        <div class="navBtn">Mods</div>
+        <div class="navBtn">Settings</div>
+
+    </div>
 
 </div>
-
-<!-- =========================
-     GAME
-========================= -->
-
-<div id="game"></div>
 
 <!-- =========================
      HUD
@@ -236,7 +223,7 @@ body{
 
 <div id="hud">
 
-    <div class="hudBox glow">
+    <div class="hudBox">
         Eagler UB v1.0
     </div>
 
@@ -254,7 +241,7 @@ body{
      CLICK GUI
 ========================= -->
 
-<div id="clickGUI">
+<div id="clickgui">
 
     <div id="guiHeader">
         Eagler UB ClickGUI
@@ -267,7 +254,6 @@ body{
     <div class="module disabled">KillAura</div>
     <div class="module enabled">AutoSprint</div>
     <div class="module enabled">NoFall</div>
-    <div class="module disabled">Reach</div>
 
 </div>
 
@@ -277,47 +263,43 @@ body{
 
 <div id="cape"></div>
 
+<!-- =========================
+     EAGLERCRAFT
+========================= -->
+
+<iframe src="client/eaglercraftX.html"></iframe>
+
 <script>
 
 /* =========================
-   VARIABLES
+   FPS COUNTER
 ========================= */
 
-const launcher = document.getElementById("launcher");
-const game = document.getElementById("game");
-const hud = document.getElementById("hud");
-const gui = document.getElementById("clickGUI");
-const cape = document.getElementById("cape");
+setInterval(() => {
+
+    let fps = Math.floor(Math.random()*50)+120;
+
+    document.getElementById("fps").innerText =
+        "FPS: " + fps;
+
+},1000);
+
+/* =========================
+   CLICK GUI TOGGLE
+========================= */
+
+const gui = document.getElementById("clickgui");
 
 let guiOpen = false;
 
-/* =========================
-   LAUNCH BUTTON
-========================= */
-
-document.getElementById("launchBtn").onclick = () => {
-
-    launcher.style.display = "none";
-
-    game.style.display = "block";
-
-    hud.style.display = "block";
-
-    cape.style.display = "block";
-
-};
-
-/* =========================
-   OPEN CLICKGUI
-========================= */
-
-document.addEventListener("keydown", (e) => {
+document.addEventListener("keydown",(e)=>{
 
     if(e.key.toLowerCase() === "r"){
 
         guiOpen = !guiOpen;
 
-        gui.style.display = guiOpen ? "block" : "none";
+        gui.style.display =
+            guiOpen ? "block" : "none";
     }
 
 });
@@ -331,9 +313,10 @@ let dragging = false;
 let offsetX = 0;
 let offsetY = 0;
 
-const header = document.getElementById("guiHeader");
+const header =
+    document.getElementById("guiHeader");
 
-header.addEventListener("mousedown", (e) => {
+header.addEventListener("mousedown",(e)=>{
 
     dragging = true;
 
@@ -342,19 +325,21 @@ header.addEventListener("mousedown", (e) => {
 
 });
 
-document.addEventListener("mouseup", () => {
+document.addEventListener("mouseup",()=>{
 
     dragging = false;
 
 });
 
-document.addEventListener("mousemove", (e) => {
+document.addEventListener("mousemove",(e)=>{
 
     if(dragging){
 
-        gui.style.left = (e.clientX - offsetX) + "px";
-        gui.style.top = (e.clientY - offsetY) + "px";
+        gui.style.left =
+            (e.clientX-offsetX)+"px";
 
+        gui.style.top =
+            (e.clientY-offsetY)+"px";
     }
 
 });
@@ -363,9 +348,10 @@ document.addEventListener("mousemove", (e) => {
    MODULE TOGGLE
 ========================= */
 
-document.querySelectorAll(".module").forEach(mod => {
+document.querySelectorAll(".module")
+.forEach(mod=>{
 
-    mod.addEventListener("click", () => {
+    mod.addEventListener("click",()=>{
 
         if(mod.classList.contains("enabled")){
 
@@ -382,19 +368,6 @@ document.querySelectorAll(".module").forEach(mod => {
     });
 
 });
-
-/* =========================
-   FPS COUNTER
-========================= */
-
-setInterval(() => {
-
-    let fps = Math.floor(Math.random() * 60) + 120;
-
-    document.getElementById("fps").innerText =
-        "FPS: " + fps;
-
-},1000);
 
 </script>
 
